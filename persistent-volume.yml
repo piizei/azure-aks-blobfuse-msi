@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-blob
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: azureblob-fuse-premium
+  mountOptions:
+    - -o allow_other
+    - --file-cache-timeout-in-seconds=120
+    #- --log-level=LOG_DEBUG
+    #- --pre-mount-validate=true
+  csi:
+    driver: blob.csi.azure.com
+    readOnly: false
+    volumeHandle: fusetest-blob
+    volumeAttributes:
+      protocol: fuse
+      resourceGroup: fusetest
+      storageAccount: fusetest
+      containerName: fusecontainer
+      AzureStorageAuthType: msi
+      #identityClientId: your-client-id-if-multiple-identities (or identityObjectId) 
